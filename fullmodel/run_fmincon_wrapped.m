@@ -1,0 +1,49 @@
+function [history f hessian fmincon_exit] = run_fmincon_wrapped(data, x_init, varargin)
+    
+pairs = { 
+    'dx'                   0.25  ; ...
+    'dt'                   0.02  ; ...
+    'lower_bound'          zeros(1,9); ...
+    'upper_bound'          ones(1,9) ; ...
+    'do_param'             ones(1,9) ; ...
+}; parseargs(varargin, pairs);   
+
+% declare global variables to keep track of fmincon's progress
+global x_names history history2 history3; %#ok<REDEF>
+x_names = {'lambda' 'sigma2_a'  'sigma2_s'  'sigma2_i' 'B'      'alpha'     'rho'   'bias'  'inatt'};
+
+history.x  = []; history.fval  = []; history.g  = []; %#ok<STRNU>
+history2.x = []; history2.fval = []; history2.g = []; 
+history3.x = []; history3.fval = []; history3.g = []; 
+
+
+fprintf(1, 'run_fmincon.m: x_init = ');
+fprintf_param_in_line(x_init, x_names);
+fprintf('\n\n');
+
+tic;
+[x_fmincon, f, exitflag, output, ~, grad, hessian] = ...
+    fmincon(@(x)ll_model_wrapper(x, data, 'dx', dx, 'dt', dt, 'track_history', 1, ...
+                                        'show_iter', 0, 'for_fmin', 1, ...
+                                        'do_param', do_param), ...
+            x_init, [], [], [], [], lower_bound, upper_bound, [], ...
+            optimset('Display', 'iter-detailed', ...
+                     'DiffMinChange', 0.0001, ...
+                     'MaxIter', 200, 'GradObj', 'on', ...
+                     'Algorithm', 'interior-point', ...
+                     'OutputFcn', 'gradient_search_outfun')...
+    );
+toc
+
+fprintf(1, '\n\n\n     run_fmincon: DONE! \n x_fmincon = ');
+fprintf_param_in_line(x_fmincon, x_names);
+fprintf('\n\n');
+
+if nargout > 3,
+    fmincon_exit.exitflag = exitflag;
+    fmincon_exit.output = output;
+    fmincon_exit.grad = grad;
+end;
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~
+
