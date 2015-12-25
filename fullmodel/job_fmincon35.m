@@ -23,7 +23,7 @@ else
     do_param = varargin{13}
 end
 
-filename = dir(['chrono_' ratname '_rawdata.mat']);
+filename = dir(['../data/chrono_' ratname '_rawdata.mat']);
 if isempty(filename),
     filename = dir([ratname '.mat']);
 end;
@@ -31,7 +31,7 @@ if isempty(filename),
     fprintf('job_fmincon35.m: Cannot find data file for %s!  Quitting... \n', ratname);
     return;
 end;
-load(filename.name);
+load(['..' pathsep 'data' pathsep filename.name]);
 
 if ~exist('total_rate', 'var'),
     total_rate = 40;
@@ -50,7 +50,7 @@ mydata = rawdata(trials);
 
 clear rawdata;
 
-saveto_filename = sprintf('fmincon_out_%s_off%i_%itrials.mat', ratname, offset, numel(mydata));
+saveto_filename = sprintf('../data/fmincon_out_%s_off%i_%itrials.mat', ratname, offset, numel(mydata));
 
 fprintf('\n\njob_fmincon35.m: mydata has %i trials at offset %i.\n', numel(mydata), offset);
 fprintf('    output will be saved as %s\n', saveto_filename);

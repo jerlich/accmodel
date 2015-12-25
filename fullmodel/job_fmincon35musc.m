@@ -46,7 +46,7 @@ end
 fprintf(1, '%s: x_init = %g %g %g %g %g %g %g %g %g %g %g %g\n',mfilename, x_init);
 
 
-filename = dir(['chrono_' ratname '_rawdata.mat']);
+filename = dir(['../data/chrono_' ratname '_rawdata.mat']);
 if isempty(filename),
     filename = dir([ratname '.mat']);
 end;
@@ -54,7 +54,7 @@ if isempty(filename),
     fprintf('%s: Cannot find data file for %s!  Quitting... \n',mfilename, ratname);
     return;
 end;
-load(filename.name);
+load(['../data/' filename.name]);
 
 if ~exist('total_rate', 'var'),
     total_rate = 40;
@@ -64,7 +64,7 @@ mydata = rawdata;
 
 clear rawdata;
 
-saveto_filename = sprintf('fmincon_out_%s_%s.mat', ratname,save_suff);
+saveto_filename = sprintf('../data/fmincon_out_%s_%s.mat', ratname,save_suff);
 
 fprintf('\n\njob_fmincon35musc.m: mydata has %i trials.\n', numel(mydata));
 fprintf('    output will be saved as %s\n', saveto_filename);
