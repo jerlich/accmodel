@@ -31,7 +31,7 @@ if isempty(filename),
     fprintf('job_fmincon35.m: Cannot find data file for %s!  Quitting... \n', ratname);
     return;
 end;
-load(['..' pathsep 'data' pathsep filename.name]);
+load(['..' filesep 'data' filesep filename.name]);
 
 if ~exist('total_rate', 'var'),
     total_rate = 40;
