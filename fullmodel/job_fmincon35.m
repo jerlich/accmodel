@@ -18,7 +18,7 @@ x_init = [x1 x2 x3 x4 x5 x6 x7 x8 x9];
 fprintf(1, 'job_fmincon35.m: x_init = %g %g %g %g %g %g %g %g %g\n', x_init);
 
 if nargin<13
-    do_param = [1 1 1 1 1 1 1 1 1];
+    do_param = [1 1 1 0 1 1 1 1 1];
 else
     do_param = varargin{13}
 end
